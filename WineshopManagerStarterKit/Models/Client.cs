@@ -12,16 +12,17 @@ namespace WineshopManagerStarterKit.Models
         public string Name { get; set; }
 
         [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid email format.")]
-        public string email { get; set; }
+        public string? email { get; set; }
 
         [StringLength(50)]
-        public string street { get; set; }
+        public string? street { get; set; }
 
         [RegularExpression(@"^\d{5}$", ErrorMessage = "Post code must be a 5-digit number.")]
-        public string postCode { get; set; }
+        public string? postCode { get; set; }
 
-        public string city { get; set; }
+        public string? city { get; set; }
+
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be a 10-digit number.")]
-        public string phone { get; set; }
+        public string? phone { get; set; }
     }
 }
