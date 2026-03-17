@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 // Database configuration: try MySQL (Pomelo) first, then SQL Server, then MariaDB (Oracle provider)
-var mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+var mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? "Server=localhost;Port=3306;Database=wineshop_db;User=root;Password=;Convert Zero Datetime=true;";
 var sqlServerConnection = builder.Configuration.GetConnectionString("SqlServerConnection")
     ?? "Server=localhost;Database=WineShopDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
 var mariaDbConnection = builder.Configuration.GetConnectionString("MariaDbConnection")
@@ -18,7 +19,9 @@ string dbProvider = "mysql";
 // Test if MySQL is reachable (for Pomelo)
 try
 {
-    using var testConnection = new MySqlConnector.MySqlConnection(mySqlConnection);
+    // Test MySQL connection using default database to avoid "database not found" errors
+    var testMySqlConnectionString = mySqlConnection.Replace("Database=wineshop_db", "Database=mysql");
+    using var testConnection = new MySqlConnector.MySqlConnection(testMySqlConnectionString);
     testConnection.Open();
     testConnection.Close();
     Console.WriteLine("MySQL connection successful. Using Pomelo/MySQL.");
@@ -28,7 +31,9 @@ catch
     // MySQL (Pomelo) not available, try SQL Server
     try
     {
-        using var testSqlConnection = new Microsoft.Data.SqlClient.SqlConnection(sqlServerConnection);
+        // Test SQL Server connection using master database to avoid "database not found" errors
+        var testSqlServerConnectionString = sqlServerConnection.Replace("Database=WineShopDb", "Database=master");
+        using var testSqlConnection = new Microsoft.Data.SqlClient.SqlConnection(testSqlServerConnectionString);
         testSqlConnection.Open();
         testSqlConnection.Close();
         dbProvider = "sqlserver";
