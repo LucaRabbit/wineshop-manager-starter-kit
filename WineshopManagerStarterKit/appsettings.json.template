@@ -8,6 +8,7 @@
   "AllowedHosts": "*",
   "ConnectionStrings": {
     "DefaultConnection": "Server=localhost;Port=3306;Database=wineshop_db;User=root;Password=YOUR_MYSQL_PASSWORD;Convert Zero Datetime=true;",
-    "SqlServerConnection": "Server=localhost;Database=WineShopDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
+    "SqlServerConnection": "Server=localhost;Database=WineShopDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True",
+    "MariaDbConnection": "Server=localhost;Port=3306;Database=wineshop_db;User=root;Password=YOUR_MYSQL_PASSWORD;"
   }
 }

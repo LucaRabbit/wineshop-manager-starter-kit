@@ -6,36 +6,56 @@ var builder = WebApplication.CreateBuilder(args);
 // Add controllers
 builder.Services.AddControllers();
 
-// Database configuration: try MySQL first, fall back to SQL Server
+// Database configuration: try MySQL (Pomelo) first, then SQL Server, then MariaDB (Oracle provider)
 var mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
 var sqlServerConnection = builder.Configuration.GetConnectionString("SqlServerConnection")
     ?? "Server=localhost;Database=WineShopDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True";
+var mariaDbConnection = builder.Configuration.GetConnectionString("MariaDbConnection")
+    ?? "Server=localhost;Port=3306;Database=wineshop_db;User=root;Password=;";
 
-var useMySql = true;
+string dbProvider = "mysql";
 
-// Test if MySQL is reachable
+// Test if MySQL is reachable (for Pomelo)
 try
 {
     using var testConnection = new MySqlConnector.MySqlConnection(mySqlConnection);
     testConnection.Open();
     testConnection.Close();
-    Console.WriteLine("MySQL connection successful. Using MySQL.");
+    Console.WriteLine("MySQL connection successful. Using Pomelo/MySQL.");
 }
 catch
 {
-    useMySql = false;
-    Console.WriteLine("MySQL is not available. Falling back to SQL Server.");
+    // MySQL (Pomelo) not available, try SQL Server
+    try
+    {
+        using var testSqlConnection = new Microsoft.Data.SqlClient.SqlConnection(sqlServerConnection);
+        testSqlConnection.Open();
+        testSqlConnection.Close();
+        dbProvider = "sqlserver";
+        Console.WriteLine("SQL Server connection successful. Using SQL Server.");
+    }
+    catch
+    {
+        // SQL Server not available either, fall back to MariaDB (Oracle provider)
+        dbProvider = "mariadb";
+        Console.WriteLine("MySQL and SQL Server not available. Falling back to MariaDB (Oracle provider).");
+    }
 }
 
-if (useMySql)
+switch (dbProvider)
 {
-    builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseMySql(mySqlConnection!, ServerVersion.AutoDetect(mySqlConnection!)));
-}
-else
-{
-    builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer(sqlServerConnection));
+    case "mysql":
+        builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseMySql(mySqlConnection!, ServerVersion.AutoDetect(mySqlConnection!)));
+        break;
+    case "sqlserver":
+        builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseSqlServer(sqlServerConnection));
+        break;
+    case "mariadb":
+        builder.Services.AddDbContext<AppDbContext>(options =>
+            options.UseMySQL(mariaDbConnection));
+        break;
 }
 
 var app = builder.Build();
