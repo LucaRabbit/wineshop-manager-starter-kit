@@ -13,19 +13,19 @@ namespace WineshopManagerStarterKit.Models
 
         [Required]
         [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid email format.")]
-        public string? email { get; set; }
+        public string? Email { get; set; }
 
         [StringLength(50)]
-        public string? street { get; set; }
+        public string? Street { get; set; }
 
         [RegularExpression(@"^\d{5}$", ErrorMessage = "Post code must be a 5-digit number.")]
-        public string? postCode { get; set; }
+        public string? PostCode { get; set; }
 
         [StringLength (50, MinimumLength = 2)]
-        public string? city { get; set; }
+        public string? City { get; set; }
 
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be a 10-digit number.")]
-        public string? phone { get; set; }
+        public string? Phone { get; set; }
 
         public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     }
