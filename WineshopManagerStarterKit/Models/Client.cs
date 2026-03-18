@@ -11,6 +11,7 @@ namespace WineshopManagerStarterKit.Models
         [StringLength(50, MinimumLength = 2)]
         public string Name { get; set; }
 
+        [Required]
         [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid email format.")]
         public string? email { get; set; }
 
