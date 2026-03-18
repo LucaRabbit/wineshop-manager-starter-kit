@@ -20,14 +20,18 @@ public class ClientsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Client>>> GetAll()
     {
-        return await _context.Clients.ToListAsync();
+        return await _context.Clients
+            .Include(c => c.Tickets) // Include related Tickets
+            .ToListAsync();
     }
 
     // GET: api/clients/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<Client>> GetById(int id)
     {
-        var client = await _context.Clients.FindAsync(id);
+        var client = await _context.Clients
+            .Include(c => c.Tickets) // Include related Tickets
+            .FirstOrDefaultAsync(c => c.Id == id);
 
         if (client == null)
         {
