@@ -8,7 +8,7 @@ namespace WineshopManagerStarterKit.Models
         public int Id { get; set; }
 
         [Required]
-        [StringLength(50)]
+        [StringLength(50, MinimumLength = 2)]
         public string Name { get; set; }
 
         [RegularExpression(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", ErrorMessage = "Invalid email format.")]
@@ -20,6 +20,7 @@ namespace WineshopManagerStarterKit.Models
         [RegularExpression(@"^\d{5}$", ErrorMessage = "Post code must be a 5-digit number.")]
         public string? postCode { get; set; }
 
+        [StringLength (50, MinimumLength = 2)]
         public string? city { get; set; }
 
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be a 10-digit number.")]
