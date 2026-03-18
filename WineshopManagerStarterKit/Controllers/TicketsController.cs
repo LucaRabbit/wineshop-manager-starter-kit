@@ -20,18 +20,14 @@ public class TicketsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Ticket>>> GetAll()
     {
-        return await _context.Tickets
-            .Include(t => t.Client) // Include related Client data
-            .ToListAsync();
+        return await _context.Tickets.ToListAsync();
     }
 
     // GET: api/tickets/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<Ticket>> GetById(int id)
     {
-        var ticket = await _context.Tickets
-            .Include(t => t.Client) // Include related Client data
-            .FirstOrDefaultAsync(t => t.Id == id);
+        var ticket = await _context.Tickets.FindAsync(id);
 
         if (ticket == null)
         {
@@ -43,7 +39,7 @@ public class TicketsController : ControllerBase
     // POST: api/tickets
     [HttpPost]
     public async Task<ActionResult<Ticket>> Create(Ticket ticket)
-    {
+        {
         _context.Tickets.Add(ticket);
         await _context.SaveChangesAsync();
 
