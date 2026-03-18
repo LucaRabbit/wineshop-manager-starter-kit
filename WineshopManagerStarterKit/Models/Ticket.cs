@@ -8,7 +8,7 @@ namespace WineshopManagerStarterKit.Models
         public int Id { get; set; }
 
         [Required]
-        public required int ClientId { get; set; }
+        public int ClientId { get; set; }
 
         [Required]
         public DateTime dateSale { get; set; }
