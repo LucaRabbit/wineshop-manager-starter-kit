@@ -25,5 +25,7 @@ namespace WineshopManagerStarterKit.Models
 
         [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be a 10-digit number.")]
         public string? phone { get; set; }
+
+        public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     }
 }
