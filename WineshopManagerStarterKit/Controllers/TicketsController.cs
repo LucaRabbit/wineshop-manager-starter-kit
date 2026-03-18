@@ -20,14 +20,19 @@ public class TicketsController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Ticket>>> GetAll()
     {
-        return await _context.Tickets.ToListAsync();
+        return await _context.Tickets
+            .Include(t => t.Client) // Include related Client data
+            .ToListAsync();
     }
 
     // GET: api/tickets/{id}
     [HttpGet("{id}")]
     public async Task<ActionResult<Ticket>> GetById(int id)
     {
-        var ticket = await _context.Tickets.FindAsync(id);
+        var ticket = await _context.Tickets
+            .Include(t => t.Client) // Include related Client data
+            .FirstOrDefaultAsync(t => t.Id == id);
+
         if (ticket == null)
         {
             return NotFound();
